@@ -9,6 +9,10 @@ module PryCommandSetRegistry
 
       begin
         set = target.eval(command_set_name)
+        unless set.respond_to?(:commands) && set.commands.is_a?(Hash)
+          registered_set = PryCommandSetRegistry.command_set(command_set_name)
+          set = registered_set if registered_set
+        end
       rescue NameError
         set = PryCommandSetRegistry.command_set(command_set_name)
         ::Kernel.raise if set.nil?

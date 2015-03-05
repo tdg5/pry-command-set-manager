@@ -49,6 +49,25 @@ class CommandsTest < PryCommandSetRegistry::TestCase
       assert_equal true, context_command_called
       assert_equal false, registry_command_called
     end
+
+    should "fallback to registry if eval result doesn't seem to be a command set" do
+      registry_command_called = false
+      PryCommandSetRegistry.define_command_set("TestCommand", "test") do
+        command("test", "test") do
+          registry_command_called = true
+        end
+      end
+
+      some_const = Object.new
+      # This will return false anyway, but make sure it gets called to ensure
+      # the eval is resolving to the expected object before falling back.
+      some_const.expects(:respond_to?).with(:commands).returns(false)
+      Object::TestCommand = some_const
+      context = Pry.binding_for(Object.new)
+      run_command("import-set TestCommand", :context => context)
+      run_command("test")
+      assert_equal true, registry_command_called
+    end
   end
 
   context "list-sets" do
