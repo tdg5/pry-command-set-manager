@@ -1,4 +1,5 @@
 module PryCommandSetRegistry
+  # A set of commands that can me imported into a Pry session.
   class CommandSet < Pry::CommandSet
     # The default group name that Pry gives to commands without a group.
     DEFAULT_GROUP_NAME = "(other)".freeze

@@ -1,5 +1,8 @@
 module PryCommandSetRegistry
   desc = "Commands for interacting with the Pry command set registry"
+
+  # Default commands for interacting with PryCommandSetRegistry imported into
+  # Pry.
   Commands = CommandSet.new("PryCommandSetRegistry", desc, :group => "Command Set Registry") do
     command("import-set", "Import a Pry command set") do |command_set_name|
       raise Pry::CommandError, "Provide a command set name" if command_set_name.nil?
