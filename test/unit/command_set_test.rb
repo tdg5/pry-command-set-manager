@@ -11,6 +11,10 @@ class CommandSetTest < PryCommandSetRegistry::TestCase
         @command_set_proc = default_command_set_proc
       end
 
+      should "raise ArgumentError if no block is given" do
+        assert_raises(ArgumentError) { Subject.new(@name, @description) }
+      end
+
       should "create a new instance from the given arguments" do
         instance = Subject.new(@name, @description, &@command_set_proc)
 
@@ -25,9 +29,15 @@ class CommandSetTest < PryCommandSetRegistry::TestCase
         assert_equal true, @command_set_proc_obj[:command_called]
       end
 
-      should "correctly set group names" do
+      should "should not set group names if no group given" do
         instance = Subject.new(@name, @description, &@command_set_proc)
-        assert_equal @name, instance.commands.values.first.group
+        assert_equal "(other)", instance.each.first.last.group
+      end
+
+      should "correctly set group names if group given" do
+        group = "Test Group"
+        instance = Subject.new(@name, @description, :group => group, &@command_set_proc)
+        assert_equal group, instance.each.first.last.group
       end
     end
   end
