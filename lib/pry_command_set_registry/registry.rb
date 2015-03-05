@@ -11,8 +11,8 @@ module PryCommandSetRegistry
       command_sets[sanitized_name]
     end
 
-    def define_command_set(name, description, &block)
-      command_set = CommandSet.new(name, description, &block)
+    def define_command_set(name, description, options = {}, &block)
+      command_set = CommandSet.new(name, description, options, &block)
       command_sets[command_set.name] = command_set
     end
   end

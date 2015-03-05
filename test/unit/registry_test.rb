@@ -16,11 +16,14 @@ class RegistryTest < PryCommandSetRegistry::TestCase
       should "create a new CommandSet with the given args" do
         name = "foo"
         description = "bar"
+        group = "Test"
+        opts = { :group => group }
         called = false
         command_set_proc = proc { called = true }
-        group = subject.define_command_set(name, description, &command_set_proc)
-        assert_equal name, group.name
-        assert_equal description, group.description
+        command_set = subject.define_command_set(name, description, opts, &command_set_proc)
+        assert_equal name, command_set.name
+        assert_equal description, command_set.description
+        assert_equal group, command_set.group
         assert_equal true, called, "CommandSet proc was not called!"
       end
     end
