@@ -1,4 +1,5 @@
 # PryCommandSetRegistry
+[![Build Status](https://travis-ci.org/tdg5/pry-command-set-registry.svg)](https://travis-ci.org/tdg5/pry-command-set-registry)
 
 Plugin for managing registration and loading of command sets in pry.
 
