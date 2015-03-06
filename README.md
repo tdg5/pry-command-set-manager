@@ -1,5 +1,6 @@
 # PryCommandSetRegistry
 [![Gem Version](https://badge.fury.io/rb/pry-command-set-registry.svg)](http://badge.fury.io/rb/pry-command-set-registry)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/gems/pry-command-set-registry)
 [![Build Status](https://travis-ci.org/tdg5/pry-command-set-registry.svg)](https://travis-ci.org/tdg5/pry-command-set-registry)
 [![Coverage Status](https://coveralls.io/repos/tdg5/pry-command-set-registry/badge.svg)](https://coveralls.io/r/tdg5/pry-command-set-registry)
 [![Code Climate](https://codeclimate.com/github/tdg5/pry-command-set-registry/badges/gpa.svg)](https://codeclimate.com/github/tdg5/pry-command-set-registry)
