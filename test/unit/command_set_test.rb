@@ -40,6 +40,47 @@ class CommandSetTest < PryCommandSetRegistry::TestCase
         assert_equal group, instance.each.first.last.group
       end
     end
+
+    context "#extend" do
+      subject { @subject }
+
+      setup do
+        @name = "Foo"
+        description = "Bar"
+        @subject = Subject.new(@name, description, &default_command_set_proc)
+      end
+
+      should "raise ArgumentError if neither arguments nor block are given" do
+        assert_raises(ArgumentError) { subject.extend }
+      end
+
+      should "raise ArgumentError if arguments and block are given" do
+        block_called = false
+        block = lambda { block_called = true }
+        dummy = Module.new
+        subject.expects(:instance_eval).never
+        assert_raises(ArgumentError) do
+          subject.extend(dummy, &block)
+        end
+        refute_kind_of(dummy, subject)
+        refute(block_called, "Expected block given to extend with arguments not to be called!")
+      end
+
+      should "yield to super if any arguments are given and no block given" do
+        dummy = Module.new
+        subject.expects(:instance_eval).never
+        result = subject.extend(dummy)
+        assert_kind_of(dummy, subject)
+        assert_equal subject, result
+      end
+
+      should "execute the block in the context of the command set if no arguments are given" do
+        receiver_in_block = nil
+        result = subject.extend { receiver_in_block = self }
+        assert_equal subject, receiver_in_block
+        assert_equal subject, result
+      end
+    end
   end
 
   # Proc is called with instance eval, so closure must be used to allow

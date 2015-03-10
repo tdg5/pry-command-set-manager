@@ -45,6 +45,33 @@ module PryCommandSetRegistry
       apply_group_name_to_commands
     end
 
+    # @overload extend(*modules)
+    #   Adds the instance methods from each module given as a parameter to the
+    #   command set. If both a block and modules are provided an ArgumentError
+    #   will be raised.
+    #   @param [Module] *modules One or more modules to extend the command set
+    #     with.
+    #   @return [PryCommandSetRegistry::CommandSet] Returns the command set
+    #     object.
+    #   @raise [ArgumentError] if called with modules and block or called with
+    #     neither modules nor block.
+    # @overload extend
+    #   Evaluates the block in the context of the command set instance. If both
+    #   a block and arguments are provided an ArgumentError will be raised.
+    #   @yield [] The given block is evaluated on the command set instance.
+    #   @return [PryCommandSetRegistry::CommandSet] Returns the command set
+    #     object.
+    #   @raise [ArgumentError] if called with modules and block or called with
+    #     neither modules nor block.
+    def extend(*modules)
+      if modules.any?
+        return super unless block_given?
+        raise ArgumentError, "Cannot call extend with block and modules!"
+      end
+      instance_eval(&Proc.new)
+      self
+    end
+
     private
 
     # If a group name was provided, adds that group to all commands in the
