@@ -1,17 +1,19 @@
 require "test_helper"
 
 class CommandsTest < PryCommandSetRegistry::TestCase
+  include PryTestCase::CommandHelpers
+
   context "import-set" do
     should "raise Pry::CommandError if no set name is given" do
       assert_raises(Pry::CommandError) do
-        Pry.commands.run_command({}, "import-set")
+        command_exec_direct("import-set")
       end
     end
 
     should "raise NameError if caught NameError doesn't match command set" do
       context = Pry.binding_for(Object.new)
       assert_raises(NameError) do
-        Pry.commands.run_command({ :target => context }, "import-set", "command_set")
+        command_exec_direct("import-set command_set", :target => context)
       end
     end
 
@@ -22,8 +24,8 @@ class CommandsTest < PryCommandSetRegistry::TestCase
           registry_command_called = true
         end
       end
-      run_command("import-set Test")
-      run_command("test")
+      command_exec_cli("import-set Test")
+      command_exec_cli("test")
       assert_equal true, registry_command_called
     end
 
@@ -44,8 +46,8 @@ class CommandsTest < PryCommandSetRegistry::TestCase
       test_struct = Struct.new(:command_set)
       test_instance = test_struct.new(test_set)
       context = Pry.binding_for(test_instance)
-      run_command("import-set command_set", :context => context)
-      run_command("test")
+      command_exec_cli("import-set command_set", :context => context)
+      command_exec_cli("test")
       assert_equal true, context_command_called
       assert_equal false, registry_command_called
     end
@@ -64,8 +66,8 @@ class CommandsTest < PryCommandSetRegistry::TestCase
       some_const.expects(:respond_to?).with(:commands).returns(false)
       Object::TestCommand = some_const
       context = Pry.binding_for(Object.new)
-      run_command("import-set TestCommand", :context => context)
-      run_command("test")
+      command_exec_cli("import-set TestCommand", :context => context)
+      command_exec_cli("test")
       assert_equal true, registry_command_called
     end
   end
@@ -79,7 +81,7 @@ class CommandsTest < PryCommandSetRegistry::TestCase
 
     should "List no registered sets when none are registered" do
       output = StringIO.new
-      run_command("list-sets", :output => output)
+      command_exec_cli("list-sets", :output => output)
       assert_equal "Registered Command Sets:\n\n", output.string
     end
 
@@ -88,13 +90,9 @@ class CommandsTest < PryCommandSetRegistry::TestCase
       name = "Foo"
       desc = "Bar"
       PryCommandSetRegistry.define_command_set(name, desc) {}
-      run_command("list-sets", :output => output)
+      command_exec_cli("list-sets", :output => output)
       expected_output = "Registered Command Sets:\n  Foo  -  Bar\n"
       assert_equal expected_output, output.string
     end
-  end
-
-  def run_command(command, options = {})
-    Pry.run_command(command, options)
   end
 end
