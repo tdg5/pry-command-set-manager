@@ -8,6 +8,8 @@ end
 
 require "minitest/autorun"
 require "mocha/setup"
+require "pry_test_case"
+require "pry_test_case/command_helpers"
 require "pry_command_set_registry"
 
 # Use alternate shoulda-style DSL for tests
