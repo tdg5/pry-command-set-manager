@@ -3,6 +3,7 @@ require "pry_command_set_registry/version"
 require "pry_command_set_registry/registry"
 require "pry_command_set_registry/command_set"
 require "pry_command_set_registry/commands"
+require "pry_command_set_registry/commands_command_set"
 
 # The namespace and primary access point for addressing the
 # PryCommandSetRegistry plugin. Home to the Registry singleton, the primary
@@ -62,4 +63,4 @@ module PryCommandSetRegistry
   private_class_method :registry=
 end
 
-Pry.commands.import(PryCommandSetRegistry::Commands)
+Pry.commands.import(PryCommandSetRegistry::CommandsCommandSet)
